@@ -4,10 +4,11 @@ db:
   repository: postgres
   tag: 14.0
   pullPolicy: IfNotPresent
-  user: ${psql_user}
-  pass: ${psql_pass}
+  user: postgres
+  pass: flowers
   name: timeflow_db
   storage: 2Gi
+  
   service:
     port: 5432
     targetPort: 5432
@@ -35,4 +36,4 @@ frontend:
 
 ingress:
   host: timeflow.helm.dyvenia.com
-  host_fastapi: timeflow.helm.dyvenia.com/fastapi
+  

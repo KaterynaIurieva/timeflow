@@ -4,10 +4,11 @@ db:
   repository: postgres
   tag: 14.0
   pullPolicy: IfNotPresent
-  user: postgres
-  pass: flowers
+  user: ${psql_user}
+  pass: ${psql_pass}
   name: timeflow_db
   storage: 2Gi
+  
   service:
     port: 5432
     targetPort: 5432
