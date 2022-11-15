@@ -19,10 +19,10 @@
 	let newClientsName: string;
 	let clients = [{}];
 	let selectedRowIds: Array<string> = [];
-	let columnsToEdit = {
-		is_active: 'toggle',
-		client_name: 'input'
-	};
+	// let columnsToEdit = {
+	// 	is_active: 'toggle',
+	// 	client_name: 'input'
+	// };
 	let updatedData: Array<object> = [];
 
 	onMount(async () => {
@@ -72,10 +72,13 @@
 					{ key: 'is_active', value: 'IS ACTIVE' }
 				]}
 				rows={clients}
-				{columnsToEdit}
 				bind:selectedRowIds
 				bind:updatedData
 				{onUpdate}
+				columnsToEdit={{
+					client_name: 'input',
+					is_active: 'toggle'
+				}}
 			/>
 		</Column>
 	</Row>
