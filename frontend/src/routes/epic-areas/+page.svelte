@@ -53,7 +53,8 @@
 	async function onUpdate() {
 		const updateRes = await fetch(`${baseUrl}/api/epic_areas/bulk_update`, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' }
+			headers: { 'Content-type': 'application/json' },
+			body: JSON.stringify(updatedData)
 		});
 		epicAreas = await getEpicAreas();
 		updatedData = [];
@@ -94,7 +95,16 @@
 				bind:selectedRowIds
 				bind:updatedData
 				{onUpdate}
-				bind:columnsToEdit
+				columnsToEdit={{
+					epic_area_name: 'input',
+					epic_name: {
+						type: 'autocomplete',
+						selectDisplay: 'epic_name',
+						options: epics,
+						placeholder: 'epic name'
+					},
+					is_active: 'toggle'
+				}}
 			/>
 		</Column>
 	</Row>
