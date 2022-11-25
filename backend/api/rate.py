@@ -97,11 +97,19 @@ async def get_rates(session: Session = Depends(get_session), is_active: bool = N
         statement_final = (
             statement.where(Rate.user_id == user_id)
             .where(Rate.client_id == client_id)
-            .order_by(Rate.id.desc())
+            .order_by(Rate.is_active.desc())
+            .order_by(Rate.valid_to.desc())
+            .order_by(Rate.valid_from.desc())
+            .order_by(Client.name.asc())
         )
 
     else:
-        statement_final = statement.order_by(Rate.id.desc())
+        statement_final = (
+            statement.order_by(Rate.is_active.desc())
+            .order_by(Rate.valid_to.desc())
+            .order_by(Rate.valid_from.desc())
+            .order_by(Client.name.asc())
+        )
     results = session.exec(statement_final).all()
     return results
 

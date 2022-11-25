@@ -55,21 +55,22 @@ async def get_teams_list(
     statement = (
         select(
             Team.id,
-            Team.lead_user_id,
-            Team.name.label("team_name"),
-            Team.short_name.label("team_short_name"),
-            Team.is_active,
-            AppUser.id,
-            AppUser.username.label("username"),
-            AppUser.first_name,
-            AppUser.last_name,
+            Team.name.label("name"),
+            Team.short_name.label("short_name"),
+            # Team.lead_user_id,
+            # Team.is_active,
+            # AppUser.id,
+            # AppUser.username.label("username"),
+            # AppUser.first_name,
+            # AppUser.last_name,
             (AppUser.first_name + " " + AppUser.last_name).label("full_lead_name"),
+            Team.is_active,
         )
         .join(AppUser)
         .where(AppUser.id == Team.lead_user_id)
     )
     if is_active != None:
-        statement_final = statement.where(Team.is_active == is_active).order_by(
+        statement_final = statement.order_by(Team.is_active.desc()).order_by(
             Team.name.asc()
         )
     else:
@@ -96,8 +97,8 @@ async def get_active_team_list(session: Session = Depends(get_session)):
         select(
             Team.id,
             Team.lead_user_id,
-            Team.name.label("team_name"),
-            Team.short_name.label("team_short_name"),
+            Team.name.label("name"),
+            Team.short_name.label("short_name"),
             AppUser.id,
             AppUser.username.label("username"),
         )
@@ -108,8 +109,8 @@ async def get_active_team_list(session: Session = Depends(get_session)):
     return results
 
 
-@router.get("/{team_name}")
-async def read_teams(team_name: str = None, session: Session = Depends(get_session)):
+@router.get("/{name}")
+async def read_teams(name: str = None, session: Session = Depends(get_session)):
     """
     Read the contents of a given team.
 
@@ -121,12 +122,12 @@ async def read_teams(team_name: str = None, session: Session = Depends(get_sessi
         SQL session that is to be used to read the team.
         Defaults to creating a dependency on the running SQL model session.
     """
-    statement = select(Team).where(Team.name == team_name)
+    statement = select(Team).where(Team.name == name)
     try:
         result = session.exec(statement).one()
         return result
     except NoResultFound:
-        msg = f"""There is no team named {team_name}"""
+        msg = f"""There is no team named {name}"""
         return msg
 
 
@@ -155,9 +156,9 @@ async def get_username_by_team_id(
     return result
 
 
-@router.put("/{team_name}/activate")
+@router.put("/{name}/activate")
 async def activate_team(
-    team_name: str = None,
+    name: str = None,
     session: Session = Depends(get_session),
 ):
     """
@@ -171,7 +172,7 @@ async def activate_team(
         SQL session that is to be used to activate the team.
         Defaults to creating a dependency on the running SQL model session.
     """
-    statement = select(Team).where(Team.name == team_name)
+    statement = select(Team).where(Team.name == name)
     team_to_activate = session.exec(statement).one()
     team_to_activate.is_active = True
     team_to_activate.updated_at = datetime.now()
@@ -181,7 +182,7 @@ async def activate_team(
     return team_to_activate
 
 
-@router.put("/{team_name}/deactivate")
+@router.put("/{name}/deactivate")
 async def deactivate_team(
     team_name: str = None,
     session: Session = Depends(get_session),
@@ -207,9 +208,9 @@ async def deactivate_team(
     return team_to_deactivate
 
 
-@router.put("/")
+@router.put("/{team_id}/")
 async def update_team(
-    id: str,
+    team_id: int = None,
     new_lead_user_id: str = None,
     new_name: str = None,
     is_active: bool = None,
@@ -232,7 +233,7 @@ async def update_team(
         SQL session that is to be used to update the team.
         Defaults to creating a dependency on the running SQL model session.
     """
-    statement = select(Team).where(Team.id == id)
+    statement = select(Team).where(Team.id == team_id)
     team_to_update = session.exec(statement).one()
     if new_lead_user_id != None:
         team_to_update.lead_user_id = new_lead_user_id
@@ -249,33 +250,34 @@ async def update_team(
 
 class UpdateTeam(BaseModel):
     id: int
-    lead_user_id: int
-    team_name: str
-    team_short_name: str
-    is_active: bool
+    name: str
+    short_name: str
     full_lead_name: str
+    is_active: bool
 
 
 @router.post("/bulk_update")
-async def update_sponsors(
+async def update_team(
     teams: List[UpdateTeam],
     session: Session = Depends(get_session),
 ):
     for team in teams:
+        print("team", team)
         statement = select(Team).where(Team.id == team.id)
         team_to_update = session.exec(statement).one()
+        print("team_to_update", team_to_update)
+        # statement2 = select(AppUser.id).where(
+        #     (AppUser.first_name + " " + AppUser.last_name) == team.full_lead_name
+        # )
+        # user_lead_id_to_update = session.exec(statement2).one()
 
-        statement2 = select(AppUser.id).where(
-            (AppUser.first_name + " " + AppUser.last_name) == team.full_lead_name
-        )
-        user_lead_id_to_update = session.exec(statement2).one()
-
-        team_to_update.lead_user_id = user_lead_id_to_update
-        team_to_update.short_name = team.team_short_name
-        team_to_update.name = team.team_name
+        # team_to_update.lead_user_id = user_lead_id_to_update
+        team_to_update.short_name = team.short_name
+        team_to_update.name = team.name
         team_to_update.is_active = team.is_active
         team_to_update.updated_at = datetime.now()
-        session.add(team_to_update)
-        # session.refresh(timelog_to_update)
+        # session.add(team_to_update)
+        # session.refresh(team_to_update)
     session.commit()
+    # return True
     # l.append(timelog_to_update)

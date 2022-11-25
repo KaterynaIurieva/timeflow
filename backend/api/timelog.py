@@ -113,11 +113,20 @@ async def get_timelogs_all(session: Session = Depends(get_session), month: int =
         .join(Epic)
     )
     if month != None:
-        statement_final = statement.where(TimeLog.month == month).order_by(
-            TimeLog.end_time.desc()
+        statement_final = (
+            statement.where(TimeLog.month == month)
+            .order_by(TimeLog.end_time.desc())
+            .order_by(TimeLog.start_time.desc())
+            .order_by(AppUser.username.asc())
         )
+
     else:
-        statement_final = statement.order_by(TimeLog.end_time.desc())
+        statement_final = (
+            statement.order_by(TimeLog.end_time.desc())
+            .order_by(TimeLog.start_time.desc())
+            .order_by(AppUser.username.asc())
+        )
+
     results = session.exec(statement_final).all()
     return results
 
@@ -145,12 +154,21 @@ async def get_timelog_by_user_id(
         .where(TimeLog.user_id == user_id)
     )
     if month != None:
-        statement_final = statement.where(TimeLog.month == month).order_by(
-            TimeLog.end_time.desc()
+        statement_final = (
+            statement.where(TimeLog.month == month)
+            .order_by(TimeLog.end_time.desc())
+            .order_by(TimeLog.start_time.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
         )
 
     else:
-        statement_final = statement.order_by(TimeLog.end_time.desc())
+        statement_final = (
+            statement.order_by(TimeLog.end_time.desc())
+            .order_by(TimeLog.start_time.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
+        )
 
     results = session.exec(statement_final).all()
     return results
@@ -215,6 +233,7 @@ async def get_timelog_user_id(
         .where(TimeLog.month == month)
         .where(TimeLog.year == year)
         .order_by(TimeLog.end_time.desc())
+        .order_by(TimeLog.start_time.desc())
     )
     results = session.exec(statement).all()
     return results
@@ -254,6 +273,7 @@ class UpdateTimeLog(BaseModel):
     """
     Pydantic model for timelogs post-update method.
     Class arguments equal frontend table headers"""
+
     id: int
     username: str
     first_name: str
@@ -265,7 +285,7 @@ class UpdateTimeLog(BaseModel):
     end_time: datetime
     count_hours: float
     count_days: float
-    
+
     @root_validator(pre=True)
     def check_time_delta(cls, values):
         assert (
@@ -287,7 +307,9 @@ class UpdateTimeLog(BaseModel):
 
 
 @router.post("/bulk_update")
-async def update_timelogs(timelogs: List[UpdateTimeLog], session: Session = Depends(get_session),
+async def update_timelogs(
+    timelogs: List[UpdateTimeLog],
+    session: Session = Depends(get_session),
 ):
     l = []
     for timelog in timelogs:
@@ -295,18 +317,18 @@ async def update_timelogs(timelogs: List[UpdateTimeLog], session: Session = Depe
         timelog_to_update = session.exec(statement).one()
         timelog_to_update.start_time = timelog.start_time
         timelog_to_update.end_time = timelog.end_time
-        
+
         time_delta = timelog.end_time - timelog.start_time
         work_delta_hours = time_delta.total_seconds() / 3600
         work_hours = "{:.3f}".format(work_delta_hours)
         work_delta_days = time_delta.total_seconds() / 3600 / 8
         work_days = "{:.3f}".format(work_delta_days)
-        
+
         timelog_to_update.count_hours = work_hours
         timelog_to_update.count_days = work_days
         timelog_to_update.updated_at = datetime.now()
         session.add(timelog_to_update)
         # session.refresh(timelog_to_update)
     session.commit()
-        # l.append(timelog_to_update)
+    # l.append(timelog_to_update)
     return l

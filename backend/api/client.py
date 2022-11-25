@@ -52,11 +52,15 @@ async def read_clients(session: Session = Depends(get_session), is_active: bool 
         Client.is_active,
     )
     if is_active != None:
-        statement_final = statement.where(Client.is_active == is_active).order_by(
-            Client.is_active.desc()
+        statement_final = (
+            statement.where(Client.is_active == is_active)
+            .order_by(Client.is_active.desc())
+            .order_by(Client.name.asc())
         )
     else:
-        statement_final = statement.order_by(Client.is_active.desc())
+        statement_final = statement.order_by(Client.is_active.desc()).order_by(
+            Client.name.asc()
+        )
     results = session.exec(statement_final).all()
     return results
 

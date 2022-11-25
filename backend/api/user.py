@@ -78,17 +78,22 @@ async def get_users(
     )
 
     if is_active != None:
-        statement_final = statement.where(AppUser.is_active == is_active).order_by(
-            AppUser.last_name.asc()
+        statement_final = (
+            statement.where(AppUser.is_active == is_active)
+            .order_by(AppUser.is_active.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
         )
 
-    elif username != None:
-        statement_final = statement.select_from(AppUser).where(
-            AppUser.username == username
-        )
+    # elif username != None:
+    #     statement_final = statement.select_from(AppUser).where(
+    #         AppUser.username == username
+    #     )
     else:
-        statement_final = statement.order_by(AppUser.start_date.desc()).order_by(
-            AppUser.is_active.desc()
+        statement_final = (
+            statement.order_by(AppUser.is_active.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
         )
 
     result = session.exec(statement_final).all()

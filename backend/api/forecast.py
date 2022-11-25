@@ -91,16 +91,23 @@ async def get_forecasts(
             .where(Forecast.month == month)
             .where(Forecast.year == year)
             .group_by(Epic.name, Forecast.month, Forecast.year)
+            .order_by(Forecast.year.desc())
+            .order_by(Forecast.month.desc())
+            .order_by(Forecast.days.desc())
+            .order_by(Epic.name.asc())
+            .order_by(AppUser.username.asc())
         )
 
     else:
         final_statement = (
             statement.order_by(Forecast.year.asc())
-            .where(Forecast.year >= datetime.now().year)
-            .where(Forecast.month >= datetime.now().month)
-            .order_by(Forecast.year)
-            .order_by(Forecast.month)
-            .order_by(Forecast.id)
+            # .where(Forecast.year >= datetime.now().year)
+            # .where(Forecast.month >= datetime.now().month)
+            .order_by(Forecast.year.desc())
+            .order_by(Forecast.month.desc())
+            .order_by(Forecast.days.desc())
+            .order_by(Epic.name.asc())
+            .order_by(AppUser.username.asc())
         )
 
     result = session.exec(final_statement).all()
@@ -141,15 +148,24 @@ async def get_forecasts_by_user(
         .where(Forecast.user_id == user_id)
     )
     if year != None and month != None:
-        final_statement = statement.where(Forecast.year == year).where(
-            Forecast.month == month
+        final_statement = (
+            statement.where(Forecast.year == year)
+            .where(Forecast.month == month)
+            .order_by(Forecast.year.desc())
+            .order_by(Forecast.month.desc())
+            .order_by(Forecast.days.desc())
+            .order_by(Epic.name.asc())
+            .order_by(AppUser.username.asc())
         )
     else:
         final_statement = (
             statement.where(Forecast.year >= datetime.now().year)
             .where(Forecast.month >= datetime.now().month)
-            .order_by(Forecast.year.asc())
-            .order_by(Forecast.month.asc())
+            .order_by(Forecast.year.desc())
+            .order_by(Forecast.month.desc())
+            .order_by(Forecast.days.desc())
+            .order_by(Epic.name.asc())
+            .order_by(AppUser.username.asc())
         )
 
     result = session.exec(final_statement).all()

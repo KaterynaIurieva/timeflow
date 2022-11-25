@@ -65,11 +65,18 @@ async def get_sponsor_list(
         Sponsor.is_active,
     ).join(Client)
     if is_active != None:
-        statement_final = statement.where(Sponsor.is_active == is_active).order_by(
-            Sponsor.is_active.desc()
+        statement_final = (
+            statement.where(Sponsor.is_active == is_active)
+            .order_by(Sponsor.is_active.desc())
+            .order_by(Sponsor.name.asc())
+            .order_by(Client.name.asc())
         )
     else:
-        statement_final = statement.order_by(Sponsor.is_active.desc())
+        statement_final = (
+            statement.order_by(Sponsor.is_active.desc())
+            .order_by(Sponsor.name.asc())
+            .order_by(Client.name.asc())
+        )
     results = session.exec(statement_final).all()
     return results
 

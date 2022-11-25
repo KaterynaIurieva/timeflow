@@ -52,11 +52,15 @@ async def read_roles(session: Session = Depends(get_session), is_active: bool = 
         Role.is_active,
     )
     if is_active != None:
-        statement_final = statement.where(Role.is_active == is_active).order_by(
-            Role.is_active.desc()
+        statement_final = (
+            statement.where(Role.is_active == is_active)
+            .order_by(Role.is_active.desc())
+            .order_by(Role.name.asc())
         )
     else:
-        statement_final = statement.order_by(Role.is_active.desc())
+        statement_final = statement.order_by(Role.is_active.desc()).order_by(
+            Role.name.asc()
+        )
     results = session.exec(statement_final).all()
     return results
 
@@ -160,7 +164,7 @@ async def update_role(
 
 class UpdateRole(BaseModel):
     id: int
-    name: str
+    role_name: str
     short_name: str
     is_active: bool
 
@@ -174,7 +178,7 @@ async def update_roles(
         statement = select(Role).where(Role.id == role.id)
         role_to_update = session.exec(statement).one()
 
-        role_to_update.name = role.name
+        role_to_update.name = role.role_name
         role_to_update.short_name = role.short_name
         role_to_update.is_active = role.is_active
         role_to_update.updated_at = datetime.now()

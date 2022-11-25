@@ -70,9 +70,17 @@ async def get_epics_list(
         .join(Sponsor)
     )
     if is_active != None:
-        statement_final = statement.order_by(Epic.id)
+        statement_final = (
+            statement.order_by(Epic.is_active.desc())
+            .order_by(Epic.start_date.desc())
+            .order_by(Epic.name.asc())
+        )
     else:
-        statement_final = statement.order_by(Epic.id)
+        statement_final = (
+            statement.order_by(Epic.is_active.desc())
+            .order_by(Epic.start_date.desc())
+            .order_by(Epic.name.asc())
+        )
 
     results = session.exec(statement_final).all()
     return results

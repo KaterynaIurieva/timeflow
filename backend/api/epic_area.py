@@ -73,14 +73,15 @@ async def get_epic_areas_list(
         statement_final = (
             statement.where(EpicArea.is_active == is_active)
             .where(EpicArea.epic_id == epic_id)
-            .order_by(EpicArea.name)
+            .order_by(EpicArea.is_active.desc())
+            .order_by(EpicArea.name.asc())
         )
     elif is_active != None and epic_id == None:
         statement_final = (
             statement.where(EpicArea.is_active == is_active)
             .order_by(EpicArea.is_active.desc())
-            .order_by(Epic.name.asc())
             .order_by(EpicArea.name.asc())
+            .order_by(Epic.name.asc())
         )
 
     elif is_active == None and epic_id != None:
@@ -88,8 +89,8 @@ async def get_epic_areas_list(
     else:
         statement_final = (
             statement.order_by(EpicArea.is_active.desc())
-            .order_by(Epic.name.asc())
             .order_by(EpicArea.name.asc())
+            .order_by(Epic.name.asc())
         )
     results = session.exec(statement_final).all()
     return results

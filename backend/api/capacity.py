@@ -80,10 +80,21 @@ async def get_capacities(
             statement.where(Capacity.user_id == user_id)
             .where(Capacity.month == month)
             .where(Capacity.year == year)
+            .order_by(Capacity.year.desc())
+            .order_by(Capacity.month.desc())
+            .order_by(Capacity.days.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
         )
 
     else:
-        statement_final = statement
+        statement_final = (
+            statement.order_by(Capacity.year.desc())
+            .order_by(Capacity.month.desc())
+            .order_by(Capacity.days.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
+        )
 
     result = session.exec(statement_final).all()
     return result
@@ -121,11 +132,23 @@ async def get_capacities_user(
         .where(Capacity.user_id == user_id)
     )
     if year != None and month != None:
-        statement_final = statement.where(Capacity.year == year).where(
-            Capacity.month == month
+        statement_final = (
+            statement.where(Capacity.year == year)
+            .where(Capacity.month == month)
+            .order_by(Capacity.year.desc())
+            .order_by(Capacity.month.desc())
+            .order_by(Capacity.days.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
         )
     else:
-        statement_final = statement
+        statement_final = (
+            statement.order_by(Capacity.year.desc())
+            .order_by(Capacity.month.desc())
+            .order_by(Capacity.days.desc())
+            .order_by(AppUser.first_name.asc())
+            .order_by(AppUser.last_name.asc())
+        )
 
     result = session.exec(statement_final).all()
     return result
