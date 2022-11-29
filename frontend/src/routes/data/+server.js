@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/public'
 
+
 export const baseUrl = env.PUBLIC_SVELTEKIT_DEV_BASE_URL
 /**
  * @param {any} timelogs
@@ -11,13 +12,23 @@ async function getTimelogs(timelogs) {
     });
     timelogs = await response.json();
     return timelogs;
-}
-
-async function getUsers() {
-    const response = await fetch(`${baseUrl}/api/users/`, {
-        method: 'GET',
-        headers: { 'Content-type': 'application/json' }
-    });
+};
+/**
+ * @param {boolean} is_active
+ */
+async function getUsers(is_active) {
+    let response
+    if (is_active === true) {
+        response = await fetch(`${baseUrl}/api/users/?is_active=${is_active}`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json' }
+        });
+    } else {
+        response = await fetch(`${baseUrl}/api/users/`, {
+            method: 'GET',
+            headers: { 'Content-type': 'application/json' }
+        });
+    }
     let users = await response.json()
     return users
 };

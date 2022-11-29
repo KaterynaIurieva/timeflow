@@ -16,7 +16,7 @@
 	let selectedMonth: string = '';
 	let updatedData: Array<object> = [];
 	onMount(async () => {
-		users = await getUsers();
+		users = await getUsers(true);
 	});
 	onMount(async () => {
 		epics = await getEpics();
@@ -112,7 +112,7 @@
 				bind:updatedData
 				{onUpdate}
 				{onRemove}
-				columnsToEdit={{ forecast_days: 'input' }}
+				columnsToEdit={{ forecast_days: 'number' }}
 			/>
 		</Column>
 	</Row>

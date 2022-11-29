@@ -31,7 +31,7 @@
 	let columnsToEdit = ['start_time', 'end_time'];
 
 	onMount(async () => {
-		users = await getUsers();
+		users = await getUsers(true);
 	});
 	onMount(async () => {
 		epicAreas = await getEpicAreas();

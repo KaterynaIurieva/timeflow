@@ -12,23 +12,23 @@
 	let selectedRowIds: Array<string> = [];
 	let newEpicsFullName: string;
 	let newEpicsShortName: string;
-	let columnsToEdit = {
-		epic_name: 'input',
-		short_name: 'input',
-		is_active: 'toggle',
-		team_name: {
-			input: 'autocomplete',
-			selectDisplay: 'team_name',
-			options: teams,
-			placeholder: "team's name"
-		},
-		sponsor_name: {
-			input: 'autocomplete',
-			selectDisplay: 'sponsor_name',
-			options: sponsors,
-			placeholder: "sponsor's name"
-		}
-	};
+	// let columnsToEdit = {
+	// 	epic_name: 'input',
+	// 	short_name: 'input',
+	// 	is_active: 'toggle',
+	// 	team_name: {
+	// 		input: 'autocomplete',
+	// 		selectDisplay: 'team_name',
+	// 		options: teams,
+	// 		placeholder: "team's name"
+	// 	},
+	// 	sponsor_name: {
+	// 		input: 'autocomplete',
+	// 		selectDisplay: 'sponsor_name',
+	// 		options: sponsors,
+	// 		placeholder: "sponsor's name"
+	// 	}
+	// };
 
 	let selectedTeam: Object = {};
 	let selectedSponsor: Object = {};
@@ -50,6 +50,7 @@
 			headers: { 'Content-type': 'application/json' },
 			body: JSON.stringify({
 				team_id: selectedTeam.id,
+				team_name: selectedTeam.team_name,
 				sponsor_id: selectedSponsor.id,
 				name: newEpicsFullName,
 				short_name: newEpicsShortName,
@@ -117,23 +118,23 @@
 				bind:selectedRowIds
 				bind:updatedData
 				{onUpdate}
-				removeAction={true}
 				columnsToEdit={{
 					epic_name: 'input',
 					short_name: 'input',
 					is_active: 'toggle',
 					team_name: {
-						input: 'autocomplete',
+						type: 'autocomplete',
 						selectDisplay: 'team_name',
 						options: teams,
 						placeholder: "team's name"
 					},
 					sponsor_name: {
-						input: 'autocomplete',
+						type: 'autocomplete',
 						selectDisplay: 'sponsor_name',
 						options: sponsors,
 						placeholder: "sponsor's name"
-					}
+					},
+					start_date: 'date'
 				}}
 			/>
 		</Column>

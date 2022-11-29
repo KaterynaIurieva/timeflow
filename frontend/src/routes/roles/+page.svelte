@@ -12,6 +12,7 @@
 	let newRolesShortName: string;
 	let columnsToEdit = ['name', 'short_name', 'is_active'];
 	let updatedData: Array<object> = [];
+	let result: any = null;
 
 	onMount(async () => {
 		roles = await getRoles();
@@ -29,12 +30,15 @@
 				updated_at: Date.now()
 			})
 		});
+		const json = await res.json();
+		result = JSON.stringify(json);
 		roles = await getRoles();
 	}
 	async function onUpdate() {
 		const updateRes = await fetch(`${baseUrl}/api/roles/bulk_update`, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json' }
+			headers: { 'Content-type': 'application/json' },
+			body: JSON.stringify(updatedData)
 		});
 		roles = await getRoles();
 		updatedData = [];
@@ -65,10 +69,14 @@
 					{ key: 'is_active', value: 'IS ACTIVE' }
 				]}
 				rows={roles}
-				{columnsToEdit}
 				bind:selectedRowIds
 				bind:updatedData
 				{onUpdate}
+				columnsToEdit={{
+					role_name: 'input',
+					short_name: 'input',
+					is_active: 'toggle'
+				}}
 			/>
 		</Column>
 	</Row>

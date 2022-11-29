@@ -22,38 +22,6 @@
 	let selectedEpic: Object = {};
 	let updatedData: Array<object> = [];
 
-	let columnsToEdit = {
-		first_name: 'input',
-		last_name: 'input',
-		role_name: {
-			type: 'autocomplete',
-			selectDisplay: 'role_name',
-			options: roles,
-			placeholder: "role's name"
-		},
-		main_team: {
-			type: 'autocomplete',
-			selectDisplay: 'team_name',
-			options: teams,
-			placeholder: "teams's name"
-		},
-		epic_name: {
-			type: 'autocomplete',
-			selectDisplay: 'epic_name',
-			options: roles,
-			placeholder: "epic's name"
-		},
-		supervisor: {
-			type: 'autocomplete',
-			selectDisplay: 'full_name',
-			options: users,
-			placeholder: 'select supervisor'
-		},
-		is_active: 'toggle',
-		email: 'input',
-		start_date: 'date'
-	};
-
 	onMount(async () => {
 		users = await getUsers();
 		columnsToEdit.supervisor.options = users;
@@ -168,7 +136,38 @@
 				bind:selectedRowIds
 				bind:updatedData
 				{onUpdate}
-				bind:columnsToEdit
+				columnsToEdit={{
+					username: 'input',
+					first_name: 'input',
+					last_name: 'input',
+					role_name: {
+						type: 'autocomplete',
+						selectDisplay: 'role_name',
+						options: roles,
+						placeholder: "role's name"
+					},
+					main_team: {
+						type: 'autocomplete',
+						selectDisplay: 'team_name',
+						options: teams,
+						placeholder: "teams's name"
+					},
+					epic_name: {
+						type: 'autocomplete',
+						selectDisplay: 'epic_name',
+						options: roles,
+						placeholder: "epic's name"
+					},
+					supervisor: {
+						type: 'autocomplete',
+						selectDisplay: 'full_name',
+						options: users,
+						placeholder: 'select supervisor'
+					},
+					is_active: 'toggle',
+					email: 'input',
+					start_date: 'date'
+				}}
 			/>
 		</Column>
 	</Row>

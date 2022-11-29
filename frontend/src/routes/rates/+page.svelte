@@ -16,10 +16,10 @@
 	let startDate: string;
 	const farDate: string = '9999-12-31';
 	let newRateValidTo: string;
-	let columnsToEdit = {
-		is_active: 'toggle',
-		username: 'input'
-	};
+	// let columnsToEdit = {
+	// 	is_active: 'toggle',
+	// 	username: 'input'
+	// };
 	let updatedData: Array<object> = [];
 	let result: any = null;
 
@@ -28,7 +28,7 @@
 		console.log('rate', rates);
 	});
 	onMount(async () => {
-		users = await getUsers();
+		users = await getUsers(true);
 	});
 	onMount(async () => {
 		clients = await getClients();
@@ -117,10 +117,26 @@
 					{ key: 'is_active', value: 'IS ACTIVE' }
 				]}
 				rows={rates}
-				{columnsToEdit}
 				bind:selectedRowIds
 				bind:updatedData
 				{onUpdate}
+				columnsToEdit={{
+					full_name: {
+						type: 'autocomplete',
+						selectDisplay: 'full_name',
+						options: users,
+						placeholder: 'full name'
+					},
+					name: {
+						type: 'autocomplete',
+						selectDisplay: 'client_name',
+						options: clients,
+						placeholder: "client's name"
+					},
+					valid_from: 'date',
+					valid_to: 'date',
+					is_active: 'toggle'
+				}}
 			/>
 		</Column>
 	</Row>
