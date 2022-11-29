@@ -16,10 +16,6 @@
 	let startDate: string;
 	const farDate: string = '9999-12-31';
 	let newRateValidTo: string;
-	// let columnsToEdit = {
-	// 	is_active: 'toggle',
-	// 	username: 'input'
-	// };
 	let updatedData: Array<object> = [];
 	let result: any = null;
 

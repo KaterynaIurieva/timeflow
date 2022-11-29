@@ -12,24 +12,6 @@
 	let selectedRowIds: Array<string> = [];
 	let newEpicsFullName: string;
 	let newEpicsShortName: string;
-	// let columnsToEdit = {
-	// 	epic_name: 'input',
-	// 	short_name: 'input',
-	// 	is_active: 'toggle',
-	// 	team_name: {
-	// 		input: 'autocomplete',
-	// 		selectDisplay: 'team_name',
-	// 		options: teams,
-	// 		placeholder: "team's name"
-	// 	},
-	// 	sponsor_name: {
-	// 		input: 'autocomplete',
-	// 		selectDisplay: 'sponsor_name',
-	// 		options: sponsors,
-	// 		placeholder: "sponsor's name"
-	// 	}
-	// };
-
 	let selectedTeam: Object = {};
 	let selectedSponsor: Object = {};
 	let startDate: string = '';

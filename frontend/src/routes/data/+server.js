@@ -18,7 +18,7 @@ async function getTimelogs(timelogs) {
  */
 async function getUsers(is_active) {
     let response
-    if (is_active === true) {
+    if (is_active) {
         response = await fetch(`${baseUrl}/api/users/?is_active=${is_active}`, {
             method: 'GET',
             headers: { 'Content-type': 'application/json' }
