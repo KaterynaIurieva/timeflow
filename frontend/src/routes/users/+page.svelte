@@ -4,7 +4,7 @@
 	import { getUsers, getRoles, getTeams } from '../data/+server.js';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
 	import Autocomplete from '../../library/components/autocomplete.svelte';
-
+	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
 	import { Grid, Column, Row, Button } from '../../library/carbon/components';
 
 	let users: Array<object> = [];
@@ -21,7 +21,10 @@
 	let startDate: string = '';
 	let selectedEpic: Object = {};
 	let updatedData: Array<object> = [];
-
+	function handleClickOutside(event) {
+		updatedData = [];
+		selectedRowIds = [];
+	}
 	onMount(async () => {
 		users = await getUsers();
 		columnsToEdit.supervisor.options = users;
@@ -119,56 +122,58 @@
 	</Row>
 	<Row>
 		<Column>
-			<EditableDatatable
-				headers={[
-					{ key: 'id', value: 'ID' },
-					{ key: 'username', value: 'USERNAME' },
-					{ key: 'first_name', value: 'FIRST NAME' },
-					{ key: 'last_name', value: 'LAST NAME' },
-					{ key: 'role_name', value: 'ROLE' },
-					{ key: 'main_team', value: 'MAIN_TEAM' },
-					{ key: 'email', value: 'EMAIL' },
-					{ key: 'start_date', value: 'START DATE' },
-					{ key: 'supervisor', value: 'SUPERVISOR' },
-					{ key: 'is_active', value: 'IS ACTIVE' }
-				]}
-				rows={users}
-				bind:selectedRowIds
-				bind:updatedData
-				{onUpdate}
-				columnsToEdit={{
-					username: 'input',
-					first_name: 'input',
-					last_name: 'input',
-					role_name: {
-						type: 'autocomplete',
-						selectDisplay: 'role_name',
-						options: roles,
-						placeholder: "role's name"
-					},
-					main_team: {
-						type: 'autocomplete',
-						selectDisplay: 'team_name',
-						options: teams,
-						placeholder: "teams's name"
-					},
-					epic_name: {
-						type: 'autocomplete',
-						selectDisplay: 'epic_name',
-						options: roles,
-						placeholder: "epic's name"
-					},
-					supervisor: {
-						type: 'autocomplete',
-						selectDisplay: 'full_name',
-						options: users,
-						placeholder: 'select supervisor'
-					},
-					is_active: 'toggle',
-					email: 'input',
-					start_date: 'date'
-				}}
-			/>
+			<div use:clickOutside on:click_outside={handleClickOutside}>
+				<EditableDatatable
+					headers={[
+						{ key: 'id', value: 'ID' },
+						{ key: 'username', value: 'USERNAME' },
+						{ key: 'first_name', value: 'FIRST NAME' },
+						{ key: 'last_name', value: 'LAST NAME' },
+						{ key: 'role_name', value: 'ROLE' },
+						{ key: 'main_team', value: 'MAIN_TEAM' },
+						{ key: 'email', value: 'EMAIL' },
+						{ key: 'start_date', value: 'START DATE' },
+						{ key: 'supervisor', value: 'SUPERVISOR' },
+						{ key: 'is_active', value: 'IS ACTIVE' }
+					]}
+					rows={users}
+					bind:selectedRowIds
+					bind:updatedData
+					{onUpdate}
+					columnsToEdit={{
+						username: 'input',
+						first_name: 'input',
+						last_name: 'input',
+						role_name: {
+							type: 'autocomplete',
+							selectDisplay: 'role_name',
+							options: roles,
+							placeholder: "role's name"
+						},
+						main_team: {
+							type: 'autocomplete',
+							selectDisplay: 'team_name',
+							options: teams,
+							placeholder: "teams's name"
+						},
+						epic_name: {
+							type: 'autocomplete',
+							selectDisplay: 'epic_name',
+							options: roles,
+							placeholder: "epic's name"
+						},
+						supervisor: {
+							type: 'autocomplete',
+							selectDisplay: 'full_name',
+							options: users,
+							placeholder: 'select supervisor'
+						},
+						is_active: 'toggle',
+						email: 'input',
+						start_date: 'date'
+					}}
+				/>
+			</div>
 		</Column>
 	</Row>
 </Grid>

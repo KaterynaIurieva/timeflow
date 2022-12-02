@@ -5,7 +5,7 @@
 	import { baseUrl } from '../data/+server.js';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
 	import Autocomplete from '../../library/components/autocomplete.svelte';
-
+	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
 	import { Grid, Column, Row, Button, TextInput } from '../../library/carbon/components';
 	let sponsors = [{}];
 	let clients: Array<object> = [];
@@ -28,6 +28,10 @@
 
 	if ((selectedRowIds = [])) {
 		updatedData = [];
+	}
+	function handleClickOutside(event) {
+		updatedData = [];
+		selectedRowIds = [];
 	}
 	onMount(async () => {
 		sponsors = await getSponsors();
@@ -64,8 +68,6 @@
 	}
 </script>
 
-<!-- clients {JSON.stringify(clients)} -->
-<!-- upData {JSON.stringify(upData)} -->
 <Grid>
 	<Row>
 		<Column>
@@ -87,20 +89,22 @@
 	</Row>
 	<Row>
 		<Column>
-			<EditableDatatable
-				headers={[
-					{ key: 'id', value: 'ID' },
-					{ key: 'sponsor_name', value: "FULL SPONSOR'S NAME" },
-					{ key: 'sponsor_short_name', value: "SHORT SPONSOR'S NAME" },
-					{ key: 'client_name', value: "CLIENT'S NAME" },
-					{ key: 'is_active', value: 'IS ACTIVE' }
-				]}
-				rows={sponsors}
-				bind:selectedRowIds
-				bind:updatedData
-				{onUpdate}
-				bind:columnsToEdit
-			/>
+			<div use:clickOutside on:click_outside={handleClickOutside}>
+				<EditableDatatable
+					headers={[
+						{ key: 'id', value: 'ID' },
+						{ key: 'sponsor_name', value: "FULL SPONSOR'S NAME" },
+						{ key: 'sponsor_short_name', value: "SHORT SPONSOR'S NAME" },
+						{ key: 'client_name', value: "CLIENT'S NAME" },
+						{ key: 'is_active', value: 'IS ACTIVE' }
+					]}
+					rows={sponsors}
+					bind:selectedRowIds
+					bind:updatedData
+					{onUpdate}
+					bind:columnsToEdit
+				/>
+			</div>
 		</Column>
 	</Row>
 </Grid>

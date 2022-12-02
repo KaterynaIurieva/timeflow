@@ -7,6 +7,8 @@
 	import Autocomplete from '../../library/components/autocomplete.svelte';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
 	import DateTimePicker from '../../library/components/DateTimePicker.svelte';
+	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
+
 	let users: any[];
 	let epics: any[];
 	let epicAreas: any;
@@ -30,6 +32,10 @@
 	let updateRes: any;
 	let columnsToEdit = ['start_time', 'end_time'];
 
+	function handleClickOutside(event) {
+		updatedData = [];
+		selectedRowIds = [];
+	}
 	onMount(async () => {
 		users = await getUsers(true);
 	});
@@ -133,23 +139,25 @@
 	</Row>
 	<Row>
 		<Column>
-			<EditableDatatable
-				headers={[
-					{ key: 'id', value: 'ID' },
-					{ key: 'username', value: 'USERAME' },
-					{ key: 'epic_name', value: 'EPIC NAME' },
-					{ key: 'epic_area_name', value: 'EPIC AREA NAME' },
-					{ key: 'start_time', value: 'START TIME' },
-					{ key: 'end_time', value: 'END TIME' },
-					{ key: 'count_hours', value: 'COUNT HOURS' },
-					{ key: 'count_days', value: 'COUNT DAYS' }
-				]}
-				rows={timelogs}
-				{columnsToEdit}
-				bind:selectedRowIds
-				{onRemove}
-				bind:updatedData
-			/>
+			<div use:clickOutside on:click_outside={handleClickOutside}>
+				<EditableDatatable
+					headers={[
+						{ key: 'id', value: 'ID' },
+						{ key: 'username', value: 'USERAME' },
+						{ key: 'epic_name', value: 'EPIC NAME' },
+						{ key: 'epic_area_name', value: 'EPIC AREA NAME' },
+						{ key: 'start_time', value: 'START TIME' },
+						{ key: 'end_time', value: 'END TIME' },
+						{ key: 'count_hours', value: 'COUNT HOURS' },
+						{ key: 'count_days', value: 'COUNT DAYS' }
+					]}
+					rows={timelogs}
+					{columnsToEdit}
+					bind:selectedRowIds
+					{onRemove}
+					bind:updatedData
+				/>
+			</div>
 		</Column>
 	</Row>
 </Grid>

@@ -17,6 +17,7 @@
 	import { getUsers, getCapacities } from '../data/+server.js';
 	import Autocomplete from '../../library/components/autocomplete.svelte';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
+	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
 
 	let users: any[];
 	let capacities = [{ id: '', last_name: '', first_name: '', year: '', month: '', days: '' }];
@@ -29,7 +30,10 @@
 	let capacityDays: number;
 	let updatedData: [];
 	let time = '';
-
+	function handleClickOutside(event) {
+		updatedData = [];
+		selectedRowIds = [];
+	}
 	onMount(async () => {
 		users = await getUsers(true);
 	});
@@ -114,29 +118,25 @@
 	</Row>
 	<Row>
 		<Column>
-			<EditableDatatable
-				headers={[
-					{ key: 'id', value: 'capacity ID' },
-					{ key: 'full_name', value: 'USER' },
-					{ key: 'year', value: 'YEAR' },
-					{ key: 'month', value: 'MONTH' },
-					{ key: 'days', value: 'CAPACITY DAYS' }
-				]}
-				rows={capacities}
-				bind:selectedRowIds
-				bind:updatedData
-				{onUpdate}
-				{onRemove}
-				columnsToEdit={{
-					days: 'number'
-				}}
-			/>
-			<!-- <Toolbar>
-				<ToolbarBatchActions>
-					<Button icon={TrashCan} on:click={onRemove}>Remove</Button>
-				</ToolbarBatchActions>
-			</Toolbar>
-			<Pagination bind:pageSize={Pagination.pageSize} bind:page={Pagination.page} /> -->
+			<div use:clickOutside on:click_outside={handleClickOutside}>
+				<EditableDatatable
+					headers={[
+						{ key: 'id', value: 'capacity ID' },
+						{ key: 'full_name', value: 'USER' },
+						{ key: 'year', value: 'YEAR' },
+						{ key: 'month', value: 'MONTH' },
+						{ key: 'days', value: 'CAPACITY DAYS' }
+					]}
+					rows={capacities}
+					bind:selectedRowIds
+					bind:updatedData
+					{onUpdate}
+					{onRemove}
+					columnsToEdit={{
+						days: 'number'
+					}}
+				/>
+			</div>
 		</Column>
 	</Row>
 </Grid>

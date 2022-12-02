@@ -6,6 +6,7 @@
 	import Autocomplete from '../../library/components/autocomplete.svelte';
 	import { Grid, Column, Row, Button, TextInput } from '../../library/carbon/components';
 	import DateTimePicker from '../../library/components/DateTimePicker.svelte';
+	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
 	let rates: any = [];
 	let users: any = [];
 	let clients: any = [];
@@ -18,7 +19,10 @@
 	let newRateValidTo: string;
 	let updatedData: Array<object> = [];
 	let result: any = null;
-
+	function handleClickOutside(event) {
+		updatedData = [];
+		selectedRowIds = [];
+	}
 	onMount(async () => {
 		rates = await getRate();
 		console.log('rate', rates);
@@ -103,37 +107,39 @@
 	</Row>
 	<Row>
 		<Column>
-			<EditableDatatable
-				headers={[
-					{ key: 'id', value: 'ID' },
-					{ key: 'full_name', value: 'FULL NAME' },
-					{ key: 'name', value: 'CLIENT NAME' },
-					{ key: 'valid_from', value: 'VALID FROM' },
-					{ key: 'valid_to', value: 'VALID TO' },
-					{ key: 'is_active', value: 'IS ACTIVE' }
-				]}
-				rows={rates}
-				bind:selectedRowIds
-				bind:updatedData
-				{onUpdate}
-				columnsToEdit={{
-					full_name: {
-						type: 'autocomplete',
-						selectDisplay: 'full_name',
-						options: users,
-						placeholder: 'full name'
-					},
-					name: {
-						type: 'autocomplete',
-						selectDisplay: 'client_name',
-						options: clients,
-						placeholder: "client's name"
-					},
-					valid_from: 'date',
-					valid_to: 'date',
-					is_active: 'toggle'
-				}}
-			/>
+			<div use:clickOutside on:click_outside={handleClickOutside}>
+				<EditableDatatable
+					headers={[
+						{ key: 'id', value: 'ID' },
+						{ key: 'full_name', value: 'FULL NAME' },
+						{ key: 'name', value: 'CLIENT NAME' },
+						{ key: 'valid_from', value: 'VALID FROM' },
+						{ key: 'valid_to', value: 'VALID TO' },
+						{ key: 'is_active', value: 'IS ACTIVE' }
+					]}
+					rows={rates}
+					bind:selectedRowIds
+					bind:updatedData
+					{onUpdate}
+					columnsToEdit={{
+						full_name: {
+							type: 'autocomplete',
+							selectDisplay: 'full_name',
+							options: users,
+							placeholder: 'full name'
+						},
+						name: {
+							type: 'autocomplete',
+							selectDisplay: 'client_name',
+							options: clients,
+							placeholder: "client's name"
+						},
+						valid_from: 'date',
+						valid_to: 'date',
+						is_active: 'toggle'
+					}}
+				/>
+			</div>
 		</Column>
 	</Row>
 </Grid>

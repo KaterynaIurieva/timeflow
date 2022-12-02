@@ -4,7 +4,7 @@
 	import { getSponsors, getTeams, getEpics } from '../data/+server.js';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
 	import Autocomplete from '../../library/components/autocomplete.svelte';
-
+	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
 	import { Grid, Column, Row, Button, TextInput } from '../../library/carbon/components';
 	let epics = [{}];
 	let teams = [{}];
@@ -16,6 +16,11 @@
 	let selectedSponsor: Object = {};
 	let startDate: string = '';
 	let updatedData: Array<object> = [];
+
+	function handleClickOutside(event) {
+		updatedData = [];
+		selectedRowIds = [];
+	}
 	onMount(async () => {
 		epics = await getEpics();
 	});
@@ -86,39 +91,41 @@
 	</Row>
 	<Row>
 		<Column>
-			<EditableDatatable
-				headers={[
-					{ key: 'id', value: 'ID' },
-					{ key: 'epic_name', value: "FULL EPIC'S NAME" },
-					{ key: 'short_name', value: "SHORT EPIC'S NAME" },
-					{ key: 'team_name', value: "TEAM'S NAME" },
-					{ key: 'sponsor_name', value: "SPONSORS'S NAME" },
-					{ key: 'start_date', value: 'START DATE' },
-					{ key: 'is_active', value: 'IS ACTIVE' }
-				]}
-				rows={epics}
-				bind:selectedRowIds
-				bind:updatedData
-				{onUpdate}
-				columnsToEdit={{
-					epic_name: 'input',
-					short_name: 'input',
-					is_active: 'toggle',
-					team_name: {
-						type: 'autocomplete',
-						selectDisplay: 'team_name',
-						options: teams,
-						placeholder: "team's name"
-					},
-					sponsor_name: {
-						type: 'autocomplete',
-						selectDisplay: 'sponsor_name',
-						options: sponsors,
-						placeholder: "sponsor's name"
-					},
-					start_date: 'date'
-				}}
-			/>
+			<div use:clickOutside on:click_outside={handleClickOutside}>
+				<EditableDatatable
+					headers={[
+						{ key: 'id', value: 'ID' },
+						{ key: 'epic_name', value: "FULL EPIC'S NAME" },
+						{ key: 'short_name', value: "SHORT EPIC'S NAME" },
+						{ key: 'team_name', value: "TEAM'S NAME" },
+						{ key: 'sponsor_name', value: "SPONSORS'S NAME" },
+						{ key: 'start_date', value: 'START DATE' },
+						{ key: 'is_active', value: 'IS ACTIVE' }
+					]}
+					rows={epics}
+					bind:selectedRowIds
+					bind:updatedData
+					{onUpdate}
+					columnsToEdit={{
+						epic_name: 'input',
+						short_name: 'input',
+						is_active: 'toggle',
+						team_name: {
+							type: 'autocomplete',
+							selectDisplay: 'team_name',
+							options: teams,
+							placeholder: "team's name"
+						},
+						sponsor_name: {
+							type: 'autocomplete',
+							selectDisplay: 'sponsor_name',
+							options: sponsors,
+							placeholder: "sponsor's name"
+						},
+						start_date: 'date'
+					}}
+				/>
+			</div>
 		</Column>
 	</Row>
 </Grid>

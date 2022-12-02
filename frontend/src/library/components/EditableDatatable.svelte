@@ -19,7 +19,6 @@
 	export let onRemove: Function;
 	export let onUpdate: Function;
 	export let updatedData: { id: number; name: string }[] = [];
-	export let onCancel = function () {};
 	export let columnsToEdit: Object = {};
 	export let filteredRowIds: any = [];
 
@@ -44,6 +43,7 @@
 			updatedData[objIndex][columnName] = event.srcElement.value;
 		}
 	}
+	// if (selectedRowIds == ) {updatedData = []}
 </script>
 
 <DataTable
@@ -59,12 +59,12 @@
 		<ToolbarContent>
 			<ToolbarSearch persistent shouldFilterRows bind:filteredRowIds />
 		</ToolbarContent>
-		<ToolbarBatchActions on:cancel={onCancel}>
+		<ToolbarBatchActions>
 			{#if onRemove}
-				<Button icon={TrashCan} on:click={onRemove}>Remove</Button>
+				<Button style="order:1;" icon={TrashCan} on:click={onRemove}>Remove</Button>
 			{/if}
 			{#if onUpdate}
-				<Button icon={UpdateNow} on:click={onUpdate}>Update</Button>
+				<Button style="order:1;" icon={UpdateNow} on:click={onUpdate}>Update</Button>
 			{/if}
 		</ToolbarBatchActions>
 	</Toolbar>

@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { baseUrl } from '../data/+server.js';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
+	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
 	import {
 		Grid,
 		Column,
@@ -19,12 +20,12 @@
 	let newClientsName: string;
 	let clients = [{}];
 	let selectedRowIds: Array<string> = [];
-	// let columnsToEdit = {
-	// 	is_active: 'toggle',
-	// 	client_name: 'input'
-	// };
-	let updatedData: Array<object> = [];
 
+	let updatedData: Array<object> = [];
+	function handleClickOutside(event) {
+		updatedData = [];
+		selectedRowIds = [];
+	}
 	onMount(async () => {
 		clients = await getClients();
 	});
@@ -65,21 +66,23 @@
 	</Row>
 	<Row>
 		<Column>
-			<EditableDatatable
-				headers={[
-					{ key: 'id', value: 'ID' },
-					{ key: 'client_name', value: 'NAME' },
-					{ key: 'is_active', value: 'IS ACTIVE' }
-				]}
-				rows={clients}
-				bind:selectedRowIds
-				bind:updatedData
-				{onUpdate}
-				columnsToEdit={{
-					client_name: 'input',
-					is_active: 'toggle'
-				}}
-			/>
+			<div use:clickOutside on:click_outside={handleClickOutside}>
+				<EditableDatatable
+					headers={[
+						{ key: 'id', value: 'ID' },
+						{ key: 'client_name', value: 'NAME' },
+						{ key: 'is_active', value: 'IS ACTIVE' }
+					]}
+					rows={clients}
+					bind:selectedRowIds
+					bind:updatedData
+					{onUpdate}
+					columnsToEdit={{
+						client_name: 'input',
+						is_active: 'toggle'
+					}}
+				/>
+			</div>
 		</Column>
 	</Row>
 </Grid>
