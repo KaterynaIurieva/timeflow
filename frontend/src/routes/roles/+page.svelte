@@ -4,7 +4,7 @@
 	import { baseUrl } from '../data/+server.js';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
 	import Autocomplete from '../../library/components/autocomplete.svelte';
-	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
+	import { clickOutside } from '../../library/components/clickOutside.js';
 	import { Grid, Column, Row, Button, TextInput } from '../../library/carbon/components';
 	let roles = [{}];
 	let selectedRowIds: Array<string> = [];

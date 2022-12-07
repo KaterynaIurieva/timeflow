@@ -7,7 +7,7 @@
 	import Autocomplete from '../../library/components/autocomplete.svelte';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
 	import DateTimePicker from '../../library/components/DateTimePicker.svelte';
-	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
+	import { clickOutside } from '../../library/components/clickOutside.js';
 
 	let users: any[];
 	let epics: any[];

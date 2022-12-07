@@ -6,7 +6,7 @@
 	import Autocomplete from '../../library/components/autocomplete.svelte';
 	import { Grid, Column, Row, Button, TextInput } from '../../library/carbon/components';
 	import DateTimePicker from '../../library/components/DateTimePicker.svelte';
-	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
+	import { clickOutside } from '../../library/components/clickOutside.js';
 	let rates: any = [];
 	let users: any = [];
 	let clients: any = [];

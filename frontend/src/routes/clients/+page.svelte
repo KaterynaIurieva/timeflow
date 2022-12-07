@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { baseUrl } from '../data/+server.js';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
-	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
+	import { clickOutside } from '../../library/components/clickOutside.js';
 	import {
 		Grid,
 		Column,

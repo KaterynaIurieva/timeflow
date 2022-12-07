@@ -17,7 +17,7 @@
 	import { getUsers, getCapacities } from '../data/+server.js';
 	import Autocomplete from '../../library/components/autocomplete.svelte';
 	import EditableDatatable from '../../library/components/EditableDatatable.svelte';
-	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
+	import { clickOutside } from '../../library/components/clickOutside.js';
 
 	let users: any[];
 	let capacities = [{ id: '', last_name: '', first_name: '', year: '', month: '', days: '' }];

@@ -7,7 +7,7 @@
 	import Autocomplete from '../../library/components/autocomplete.svelte';
 
 	import { Grid, Column, Row, Button, TextInput } from '../../library/carbon/components';
-	import { clickOutside } from '/home/kateryna_iurieva/timeflow/frontend/src/clickOutside.js';
+	import { clickOutside } from '../../library/components/clickOutside.js';
 	let teams = [{}];
 	let users: [{}];
 	let selectedRowIds: Array<string> = [];
